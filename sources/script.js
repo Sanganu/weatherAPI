@@ -3,19 +3,23 @@
 
 // var history = JSON.parse(window.localStorage.getItem("history")) || [];
 var len = []
-var previouscities = JSON.parse(window.localStorage.getItem("weathersearchAPI"))|| [];
+var previouscities = JSON.parse(localStorage.getItem("weathersearchAPI"))|| [];
 
 console.log("SearchList",localStorage.weathersearchAPI);
 
-$("#list").empty();
-for(let i=0;i<previouscities.length;i++){
-    $("#list").append("<li>"+previouscities[i].city+"</li>")
+function displayRecentSearch(){
+    $("#list").empty();
+    for(let i=0;i<previouscities.length;i++){
+        $("#list").append("<li>"+previouscities[i].city+"</li>")
+    }
 }
 
+displayRecentSearch();
 
-// $("#list").append(localStorage.weathersearchAPI);
 
-//SEa
+
+
+//SEarch weather
 $("#searchweather").on("click",function(event){
     event.preventDefault();
     var city = $("#entercity").val().trim() || "Denver"
@@ -27,7 +31,7 @@ $("#searchweather").on("click",function(event){
         success: function(data){
             console.log(data);
           if(localStorage.weathersearchAPI){
-            previouscities = JSON.parse(window.localStorage.getItem("weathersearchAPI"));
+            previouscities = JSON.parse(localStorage.getItem("weathersearchAPI"));
             len = previouscities.length;
           }
           else{
@@ -46,15 +50,17 @@ $("#searchweather").on("click",function(event){
            if(!found || len ===0){
                previouscities.push({city});
            }
-            window.localStorage.setItem("weathersearchAPI",JSON.stringify(previouscities));
+            localStorage.setItem("weathersearchAPI",JSON.stringify(previouscities));
+            
             $("#weathercontainer").empty();
-           
+            
             var todate = new Date().toLocaleDateString()
         
             $("#weathercontainer").append(`
             <div class=""><h5>${data.name}</h5><p>${todate}</p>
             <h6>${data.wind.speed}MPH</h6><h6>${data.main.humidity}%</h6>
             <h6>${data.main.temp}°F</h6><img src="http://openweathermap.org/img/w/${data.weather[0].icon}.png"/></div>`)
+            displayRecentSearch();
         }});
         getforecast(city);
    
