@@ -3,67 +3,40 @@
 
 // var history = JSON.parse(window.localStorage.getItem("history")) || [];
 var len = []
-var previouscities = JSON.parse(localStorage.getItem("weathersearchAPI"))|| [];
+var previouscities = JSON.parse(localStorage.getItem("weatherAPI"))|| [];
 
-console.log("SearchList",localStorage.weathersearchAPI);
+console.log("SearchList",localStorage.weatherAPI);
 
 function displayRecentSearch(){
     $("#list").empty();
     for(let i=0;i<previouscities.length;i++){
-        $("#list").append("<li>"+previouscities[i].city+"</li>")
+        $("#list").append("<li class='previoussearch'>"+previouscities[i]+"</li>")
     }
 }
 
 displayRecentSearch();
 
-
+$("#list").on("click",".previoussearch",function(event){
+    var city = $(this).text();
+    getCurrentWeather(city);
+    getforecast(city);
+})
 
 
 //SEarch weather
 $("#searchweather").on("click",function(event){
     event.preventDefault();
-    var city = $("#entercity").val().trim() || "Denver"
+    var city = $("#entercity").val().trim() || "Denver";
 
-    $.ajax({
-        type:"GET",
-        url:"https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=39e91c48d1b4f937beac8b5748619871&units=imperial",
-        datatype:"json",
-        success: function(data){
-            console.log(data);
-          if(localStorage.weathersearchAPI){
-            previouscities = JSON.parse(localStorage.getItem("weathersearchAPI"));
-            len = previouscities.length;
-          }
-          else{
-              len = 0;
-          }
-            console.log("The Previous cities",previouscities);
-            var found = false;
-            let i =0;
-           while(i<len && found === false){
-               if (previouscities[i].city === city){
-                   found = true;
-               }
-               i++;
+       if (previouscities.indexOf(city.toLowerCase())=== -1)
+           {
+               previouscities.push(city.toLowerCase());
+               localStorage.setItem("weatherAPI",JSON.stringify(previouscities));
            }
-           console.log(found)
-           if(!found || len ===0){
-               previouscities.push({city});
-           }
-            localStorage.setItem("weathersearchAPI",JSON.stringify(previouscities));
-            
-            $("#weathercontainer").empty();
-            
-            var todate = new Date().toLocaleDateString()
-        
-            $("#weathercontainer").append(`
-            <div class=""><h5>${data.name}</h5><p>${todate}</p>
-            <h6>${data.wind.speed}MPH</h6><h6>${data.main.humidity}%</h6>
-            <h6>${data.main.temp}°F</h6><img src="http://openweathermap.org/img/w/${data.weather[0].icon}.png"/></div>`)
-            displayRecentSearch();
-        }});
+        console.log(localStorage.getItem("weatherAPI"))
+        getCurrentWeather(city);
         getforecast(city);
-   
+        $("#entercity").val("")
 });
 
 function getforecast(cityname){
@@ -84,6 +57,31 @@ function getforecast(cityname){
                   }
               }
               $("#forecast").append("</div>")
+        },
+        error: function(error){
+            console.log("API to fetch for the city failed. Try another city",error)
         }
     })
+}
+
+function getCurrentWeather(city){
+
+    $.ajax({
+        type:"GET",
+        url:"https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=39e91c48d1b4f937beac8b5748619871&units=imperial",
+        datatype:"json",
+        success: function(data){
+            console.log(data);
+  
+            
+            $("#weathercontainer").empty();
+            
+            var todate = new Date().toLocaleDateString()
+        
+            $("#weathercontainer").append(`
+            <div class=""><h5>${data.name}</h5><p>${todate}</p>
+            <h6>${data.wind.speed}MPH</h6><h6>${data.main.humidity}%</h6>
+            <h6>${data.main.temp}°F</h6><img src="http://openweathermap.org/img/w/${data.weather[0].icon}.png"/></div>`)
+            displayRecentSearch();
+        }});
 }
