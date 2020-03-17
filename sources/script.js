@@ -8,6 +8,7 @@ var previouscities = JSON.parse(localStorage.getItem("weatherAPI"))|| [];
 console.log("SearchList",localStorage.weatherAPI);
 
 function displayRecentSearch(){
+    var previouscities = JSON.parse(localStorage.getItem("weatherAPI"))|| [];
     $("#list").empty();
     for(let i=0;i<previouscities.length;i++){
         $("#list").append("<li class='previoussearch'>"+previouscities[i]+"</li>")
@@ -28,15 +29,9 @@ $("#searchweather").on("click",function(event){
     event.preventDefault();
     var city = $("#entercity").val().trim() || "Denver";
 
-       if (previouscities.indexOf(city.toLowerCase())=== -1)
-           {
-               previouscities.push(city.toLowerCase());
-               localStorage.setItem("weatherAPI",JSON.stringify(previouscities));
-           }
-        console.log(localStorage.getItem("weatherAPI"))
-        getCurrentWeather(city);
-        getforecast(city);
-        $("#entercity").val("")
+         getCurrentWeather(city);
+         getforecast(city);
+        $("#entercity").val("");
 });
 
 function getforecast(cityname){
@@ -56,12 +51,21 @@ function getforecast(cityname){
                       <p>${data.list[i].main.humidity}%</p><p>${data.list[i].main.temp}°F</p></div></div>`)
                   }
               }
-              $("#forecast").append("</div>")
-        },
+              $("#forecast").append("</div>");
+                if (previouscities.indexOf(cityname.toLowerCase())=== -1)
+                    {
+                        previouscities.push(cityname.toLowerCase());
+                        localStorage.setItem("weatherAPI",JSON.stringify(previouscities));
+                        displayRecentSearch();
+                    }
+                   console.log(localStorage.getItem("weatherAPI"))
+        }, 
         error: function(error){
             console.log("API to fetch for the city failed. Try another city",error)
+            alert("Unable to fetch forecast. Please enter city name. Example: Chicago / Denver / Dallas");
+            
         }
-    })
+    });
 }
 
 function getCurrentWeather(city){
@@ -72,16 +76,12 @@ function getCurrentWeather(city){
         datatype:"json",
         success: function(data){
             console.log(data);
-  
-            
             $("#weathercontainer").empty();
-            
             var todate = new Date().toLocaleDateString()
-        
             $("#weathercontainer").append(`
             <div class=""><h5>${data.name}</h5><p>${todate}</p>
             <h6>${data.wind.speed}MPH</h6><h6>${data.main.humidity}%</h6>
             <h6>${data.main.temp}°F</h6><img src="http://openweathermap.org/img/w/${data.weather[0].icon}.png"/></div>`)
-            displayRecentSearch();
         }});
 }
+
