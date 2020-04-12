@@ -45,7 +45,8 @@ function getforecast(cityname){
               $("#forecast").html("<div class='row'>");
               for(let i=0;i< data.list.length;i++){
                   if(data.list[i].dt_txt.endsWith("06:00:00")){
-                      $("#forecast").append(`<div class="col s6 m3"><div class="card cyan darken-1"><h5>${data.list[i].dt_txt}</h5>
+                      $("#forecast").append(`<div class="col s6 m3"><div class="card #00acc1 cyan darken-1"><h5 class="flow-text">${moment(data.list[i].dt_txt).format('dddd')}</h5>
+                      <p>${moment(data.list[i].dt_txt).format('l')}</p><p>${moment(data.list[i].dt_txt).format('LT')}</p>
                       <img src="http://openweathermap.org/img/w/${data.list[i].weather[0].icon}.png"/>
                       <p>${data.list[i].wind.speed}mph</p>
                       <p>${data.list[i].main.humidity}%</p><p>${data.list[i].main.temp}°F</p></div></div>`)
@@ -79,9 +80,16 @@ function getCurrentWeather(city){
             $("#weathercontainer").empty();
             var todate = new Date().toLocaleDateString()
             $("#weathercontainer").append(`
-            <div class=""><h5>${data.name}</h5><p>${todate}</p>
+            <div class="row">
+            <div class="col s12 m10">
+            <div class="card-panel #00838f cyan darken-3 z-dept-2">
+            <h5 class="card-title">${data.name}</h5>
+            <div class="card-content"><p>${todate}</p>
             <h6>${data.wind.speed}MPH</h6><h6>${data.main.humidity}%</h6>
-            <h6>${data.main.temp}°F</h6><img src="http://openweathermap.org/img/w/${data.weather[0].icon}.png"/></div>`)
+            <img src="http://openweathermap.org/img/w/${data.weather[0].icon}.png"/>
+            <h6>${data.main.temp}°F</h6>
+            </div>
+            </div></div></div>`)
         }});
 }
 
