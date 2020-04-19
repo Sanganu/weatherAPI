@@ -23,7 +23,9 @@ $("#list").on("click",".previoussearch",function(event){
     getforecast(city);
 })
 
-
+var recentsearch= previouscities[previouscities.length-1];
+getforecast(recentsearch);
+getCurrentWeather(recentsearch);
 //SEarch weather
 $("#searchweather").on("click",function(event){
     event.preventDefault();
@@ -69,6 +71,28 @@ function getforecast(cityname){
     });
 }
 
+function displayUVIndex(lon,lat){
+    $.ajax({
+        type:"GET",
+        url:`https://api.openweathermap.org/data/2.5/uvi?appid=39e91c48d1b4f937beac8b5748619871&lat=${lat}&lon=${lon}`,
+        datatype:"json",
+        success: function(data){
+            console.log(data);
+         
+            $("#weathercontainer").append(`<h6>UV:  ${data.value}`);
+            if(data.value < 3){
+                $("#weathercontainer").append(`<span><button class="btn btn-success"></button></span>`)
+            }else if(data.value < 7){
+                $("#weathercontainer").append(`<span><button class="btn btn-warning"></button></span>`)       
+            }else{
+                $("#weathercontainer").append(`<span><button class="btn btn-dangers"></button></span>`)             
+            }
+            $("#weathercontainer").append(`</h6></div></div></div></div>`)
+        }
+    });
+}
+
+
 function getCurrentWeather(city){
 
     $.ajax({
@@ -88,8 +112,8 @@ function getCurrentWeather(city){
             <h6>${data.wind.speed}MPH</h6><h6>${data.main.humidity}%</h6>
             <img src="http://openweathermap.org/img/w/${data.weather[0].icon}.png"/>
             <h6>${data.main.temp}°F</h6>
-            </div>
-            </div></div></div>`)
+           `)
+           displayUVIndex(data.coord.lon,data.coord.lat)
         }});
 }
 
