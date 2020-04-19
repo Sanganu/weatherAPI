@@ -81,7 +81,7 @@ async function displayUVIndex(lon,lat){
             console.log(data);
          
             if(data.value < 3){
-              uvstring = `<span><button class="btn-small #004d40 teal darken-4 disable">${dta.value}</button></span>`
+              uvstring = `<span><button class="btn-small #ffff00 yellow accent-2 disable">${dta.value}</button></span>`
             }else if(data.value < 7){
                  uvstring =`<span><button class="btn-small #e65100 orange darken-4 disable">${data.value}</button></span>`     
             }else{
