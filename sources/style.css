@@ -4,7 +4,14 @@
 
 #current{
     border: 1px solid black;
-    background: linear-gradient(#e66465, #9198e5);
+    background: linear-gradient(#e66465, #16cae2);
+    display:float;
     justify-content: center;
     align-items: center;
+}
+.card-panel{
+    text-align: center;
+}
+.card{
+    text-align: center;
 }
