@@ -2,16 +2,17 @@
    
 }  
 
-#current{
-    border: 1px solid black;
-    background: linear-gradient(#e66465, #16cae2);
-    display:float;
-    justify-content: center;
-    align-items: center;
+.container{
+    margin-top: 2%;
 }
 .card-panel{
     text-align: center;
+    font-family: 'Baloo Bhaina 2', cursive;
+    
+  
 }
 .card{
     text-align: center;
+   font-family: 'Noto Sans', sans-serif;
+
 }

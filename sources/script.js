@@ -71,8 +71,9 @@ function getforecast(cityname){
     });
 }
 
-function displayUVIndex(lon,lat){
-    $.ajax({
+async function displayUVIndex(lon,lat){
+    var uvstring;
+   await  $.ajax({
         type:"GET",
         url:`https://api.openweathermap.org/data/2.5/uvi?appid=39e91c48d1b4f937beac8b5748619871&lat=${lat}&lon=${lon}`,
         datatype:"json",
@@ -80,14 +81,17 @@ function displayUVIndex(lon,lat){
             console.log(data);
          
             if(data.value < 3){
-            return `${data.value}<span><button class="btn btn-success"></button></span>`
+              uvstring = `<span><button class="btn-small #004d40 teal darken-4 disable">${dta.value}</button></span>`
             }else if(data.value < 7){
-             return `${data.value}<span><button class="btn btn-warning"></button></span>`     
+                 uvstring =`<span><button class="btn-small #e65100 orange darken-4 disable">${data.value}</button></span>`     
             }else{
-               return `${data.value}<span><button class="btn btn-dangers"></button></span>`          
+                 uvstring = `<span><button class="btn-small #b71c1c red darken-4 disable">${data.value}</button></span>`          
             }
+            console.log(uvstring)
+        
         }
     });
+    return uvstring;
 }
 
 
@@ -101,19 +105,26 @@ function getCurrentWeather(city){
             console.log(data);
             $("#weathercontainer").empty();
             var todate = new Date().toLocaleDateString();
-            var uvindex =  displayUVIndex(data.coord.lon,data.coord.lat);
-            console.log(uvindex)
-            $("#weathercontainer").append(`
-            <div class="row">
-            <div class="col s12 m10">
-            <div class="card-panel #00838f cyan darken-3 z-dept-2">
-            <h5 class="card-title">${data.name}</h5>
-            <div class="card-content"><p>${todate}</p>
-            <img src="http://openweathermap.org/img/w/${data.weather[0].icon}.png"/>
-            <h6>${data.wind.speed}MPH</h6><h6>${data.main.humidity}%</h6>
-            <h6>${data.main.temp}°F</h6>
-            <h6>UV:  ${uvindex}</h6></div></div></div></div>
-           `)
+            displayUVIndex(data.coord.lon,data.coord.lat)
+            .then(function(uvindex){
+                console.log(uvindex)
+                $("#weathercontainer").append(`
+                <div class="row">
+                <div class="col s12 m10">
+                <div class="card-panel #00838f cyan darken-3 z-dept-2">
+                    <h5 class="card-title">${data.name}</h5>
+                  <div class="card-content"><p>${todate}</p>
+                     <img src="http://openweathermap.org/img/w/${data.weather[0].icon}.png"/>
+                     <h6>${data.wind.speed}MPH</h6><h6>${data.main.humidity}%</h6>
+                     <h6>${data.main.temp}°F</h6>
+                     <h6>UV:  ${uvindex}</h6>
+                  </div>
+                </div>
+                </div>
+                </div>
+               `)
+            })
+           
         
         }});
 }
