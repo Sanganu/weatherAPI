@@ -5,13 +5,15 @@
 var len = []
 var previouscities = JSON.parse(localStorage.getItem("weatherAPI"))|| [];
 
-console.log("SearchList",localStorage.weatherAPI);
+// console.log("SearchList",localStorage.weatherAPI);
 
 function displayRecentSearch(){
     var previouscities = JSON.parse(localStorage.getItem("weatherAPI"))|| [];
     $("#list").empty();
     for(let i=0;i<previouscities.length;i++){
-        $("#list").append("<li class='previoussearch'>"+previouscities[i]+"</li>")
+        $("#list").append("<li class='previoussearch'>"+
+        previouscities[i].slice(0,1).toUpperCase()+previouscities[i].slice(1)+
+        "<i class='material-icons'>delete</i></li>")
     }
 }
 
@@ -23,9 +25,11 @@ $("#list").on("click",".previoussearch",function(event){
     getforecast(city);
 })
 
+if(previouscities.length > -1){
 var recentsearch= previouscities[previouscities.length-1];
 getforecast(recentsearch);
 getCurrentWeather(recentsearch);
+}
 //SEarch weather
 $("#searchweather").on("click",function(event){
     event.preventDefault();
