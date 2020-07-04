@@ -11,9 +11,9 @@ function displayRecentSearch(){
     var previouscities = JSON.parse(localStorage.getItem("weatherAPI"))|| [];
     $("#list").empty();
     for(let i=0;i<previouscities.length;i++){
-        $("#list").append("<li class='previoussearch'>"+
+        $("#list").append("<li><span class='previoussearch'>"+
         previouscities[i].slice(0,1).toUpperCase()+previouscities[i].slice(1)+
-        "<i class='material-icons'>delete</i></li>")
+        "</apan><i class='material-icons'>delete</i></li>")
     }
 }
 
