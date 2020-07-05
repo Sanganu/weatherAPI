@@ -2,38 +2,48 @@
 
 
 // var history = JSON.parse(window.localStorage.getItem("history")) || [];
-var len = []
-var previouscities = JSON.parse(localStorage.getItem("weatherAPI"))|| [];
+let len = []
+let previouscities = JSON.parse(localStorage.getItem("weatherAPI"))|| [];
 
 // console.log("SearchList",localStorage.weatherAPI);
 
 function displayRecentSearch(){
-    var previouscities = JSON.parse(localStorage.getItem("weatherAPI"))|| [];
+     previouscities = JSON.parse(localStorage.getItem("weatherAPI"))|| [];
     $("#list").empty();
     for(let i=0;i<previouscities.length;i++){
         $("#list").append("<li><span class='previoussearch'>"+
         previouscities[i].slice(0,1).toUpperCase()+previouscities[i].slice(1)+
-        "</apan><i class='material-icons'>delete</i></li>")
+        "</span><i class='deletecity material-icons'>delete</i></li>")
     }
 }
 
 displayRecentSearch();
 
+$("#list").on("click",".deletecity",function(event){
+   let citydelete = $(this).siblings("span").text().toLowerCase();
+//    console.log("CD",citydelete)
+  let previous= previouscities.filter(city =>city!= citydelete);
+   console.log(previous);
+   localStorage.setItem("weatherAPI", JSON.stringify(previous))
+   displayRecentSearch();
+})
+
 $("#list").on("click",".previoussearch",function(event){
-    var city = $(this).text();
+    let city = $(this).text();
     getCurrentWeather(city);
     getforecast(city);
 })
 
-if(previouscities.length > -1){
-var recentsearch= previouscities[previouscities.length-1];
-getforecast(recentsearch);
-getCurrentWeather(recentsearch);
+if(previouscities.length > 0){
+    console.log("Previou",previouscities.length)
+    let recentsearch= previouscities[previouscities.length-1];
+    getforecast(recentsearch);
+    getCurrentWeather(recentsearch);
 }
 //SEarch weather
 $("#searchweather").on("click",function(event){
     event.preventDefault();
-    var city = $("#entercity").val().trim() || "Denver";
+    let city = $("#entercity").val().trim() || "Denver";
 
          getCurrentWeather(city);
          getforecast(city);
@@ -76,7 +86,7 @@ function getforecast(cityname){
 }
 
 async function displayUVIndex(lon,lat){
-    var uvstring;
+    let uvstring;
    await  $.ajax({
         type:"GET",
         url:`https://api.openweathermap.org/data/2.5/uvi?appid=39e91c48d1b4f937beac8b5748619871&lat=${lat}&lon=${lon}`,
@@ -108,7 +118,7 @@ function getCurrentWeather(city){
         success: function(data){
             console.log(data);
             $("#weathercontainer").empty();
-            var todate = new Date().toLocaleDateString();
+            let todate = new Date().toLocaleDateString();
             displayUVIndex(data.coord.lon,data.coord.lat)
             .then(function(uvindex){
                 console.log(uvindex)
