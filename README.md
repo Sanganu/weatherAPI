@@ -13,7 +13,7 @@
 
 #### Coded By: *Sangeetha.K*
 ##### Desgination: Senior Tutor, 2U
-##### Screenshots
-[Screenshot](https://github.com/Sanganu/weatherAPI/blob/master/sources/screenshot1.PNG)
+##### Screenshot
+![Screenshot](https://github.com/Sanganu/weatherAPI/blob/master/sources/screenshot1.PNG)
 
 
