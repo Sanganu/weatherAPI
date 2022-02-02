@@ -14,6 +14,6 @@
 #### Coded By: *Sangeetha.K*
 ##### Desgination: Senior Tutor, 2U
 ##### Screenshot
-![Screenshot] (https://github.com/Sanganu/weatherAPI/blob/master/sources/iimages/screenshot1.PNG)
+! [Screenshot] (/sources/iimages/screenshot1.PNG)
 
 
