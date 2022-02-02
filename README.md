@@ -14,6 +14,6 @@
 #### Coded By: *Sangeetha.K*
 ##### Desgination: Senior Tutor, 2U
 ##### Screenshot
-! [Screenshot] (/sources/iimages/screenshot1.PNG)
+![Screenshot](/sources/images/screenshot1.PNG)
 
 
